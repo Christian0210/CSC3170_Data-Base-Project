@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Intelligent Farm</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/flexslider.css" rel="stylesheet" >
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/queries.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+						<link rel="stylesheet" href="">
+						<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+            <script>
+              function showSite()
+              {
+                  var Year = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value;
+                  var Month = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value;
+                  var Day = document.reg_testdate.DD.options[document.reg_testdate.DD.selectedIndex].value;
+                  var dat = new Array();//年月日 + 7个属性
+                  dat.push(Year);
+                  dat.push(Month);
+                  dat.push(Day);
+                  var opt  = document.getElementsByName("ent");
+                  for(var i = 0; i < opt.length; i++){
+                    if(opt[i].checked)
+                      dat.push(1);
+                    else
+                      dat.push(0);
+                  }
+
+                  if (window.XMLHttpRequest)
+                  {
+                      xmlhttp=new XMLHttpRequest();
+                  }
+                  else
+                  {
+                      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                  }
+
+                  xmlhttp.onreadystatechange=function()
+                  {
+                      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                      {
+                        document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+                      }
+                  }
+                  
+                  xmlhttp.open("GET","f1fake.php?q="+dat,true);
+                  xmlhttp.send();                  
+              }
+
+              function showPic()
+              {
+                  var dat; //属性
+                  var opt = document.getElementsByName("ent2");
+                  for(var i = 0; i < opt.length; i++){
+                    if(opt[i].checked)
+                      dat = i;
+                  }
+
+                  if (window.XMLHttpRequest)
+                  {
+                      xmlhttp=new XMLHttpRequest();
+                  }
+                  else
+                  {
+                      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                  }
+
+                  xmlhttp.onreadystatechange=function()
+                  {
+                      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                      {
+                        document.getElementById("txtHint2").innerHTML=xmlhttp.responseText;
+                      }
+                  }
+                  xmlhttp.open("GET","f2info.php?q="+dat,true);
+                  xmlhttp.send();                  
+              }
+
+              function pred()
+              {
+                  var dat = new Array; //属性
+                  var opt = document.getElementsByName("ent3");
+                  for(var i = 0; i < opt.length; i++){
+                      dat.push(opt[i].value);
+                  }
+
+                  if (window.XMLHttpRequest)
+                  {
+                      xmlhttp=new XMLHttpRequest();
+                  }
+                  else
+                  {
+                      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                  }
+
+                  xmlhttp.onreadystatechange=function()
+                  {
+                      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                      {
+                        document.getElementById("txtHint3").innerHTML=xmlhttp.responseText;
+                      }
+                  }
+                  xmlhttp.open("GET","f3info.php?q="+dat,true);
+                  xmlhttp.send();                  
+              }
+
+            </script>
+            <script language="JavaScript">  
+              function YYYYMMDDstart()   
+              {   
+                  MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];  
+                  var y  = new Date().getFullYear();
+                  for (var i = (y-1); i < (y); i++)
+                          document.reg_testdate.YYYY.options.add(new Option(" "+ i, i));
+                  for (var i = 1; i < 13; i++)
+                          document.reg_testdate.MM.options.add(new Option(" " + i, i));
+                  document.reg_testdate.YYYY.value = y;
+                  document.reg_testdate.MM.value = new Date().getMonth() + 1;
+                  var n = MonHead[new Date().getMonth()];
+                  if (new Date().getMonth() ==1 && IsPinYear(YYYYvalue)) n++;
+                      writeDay(n);
+                  document.reg_testdate.DD.value = new Date().getDate();
+              }   
+              if(document.attachEvent)   
+                  window.attachEvent("onload", YYYYMMDDstart);   
+              else   
+                  window.addEventListener('load', YYYYMMDDstart, false);   
+              function YYYYDD(str) 
+              {   
+                  var MMvalue = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value;   
+                  if (MMvalue == ""){ var e = document.reg_testdate.DD; optionsClear(e); return;}   
+                  var n = MonHead[MMvalue - 1];   
+                  if (MMvalue ==2 && IsPinYear(str)) n++;   
+                      writeDay(n)   
+              }   
+              function MMDD(str)
+              {   
+                  var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value;   
+                  if (YYYYvalue == ""){ var e = document.reg_testdate.DD; optionsClear(e); return;}   
+                  var n = MonHead[str - 1];   
+                  if (str ==2 && IsPinYear(YYYYvalue)) n++;   
+                  writeDay(n)   
+              }   
+              function writeDay(n)
+              {   
+                  var e = document.reg_testdate.DD; optionsClear(e);   
+                  for (var i=1; i<(n+1); i++)   
+                      e.options.add(new Option(" "+ i, i));   
+              }   
+              function IsPinYear(year)  
+              {     return(0 == year%4 && (year%100 !=0 || year%400 == 0));}   
+              function optionsClear(e)   
+              {     e.options.length = 1;}   
+            </script> 
+    <style>
+      .outer1{
+            width:1000px;
+            height:400px;
+            border:3px solid black;
+            text-align: center; 
+            margin: 0 auto;
+            padding:20px 0;
+      }
+
+      .no{
+            width:1250px;
+            height:795px;
+            border:3px solid rgb(255, 255, 255);
+            text-align: center; 
+            margin: 0 auto;
+            padding:20px 0;
+            overflow:hidden;
+      }
+      
+      select{
+            outline-style: none ;
+            border: 2px solid #ccc; 
+            border-radius: 3px;
+            padding: 9px 14px;
+            width: 150px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: "Microsoft soft";
+      }
+      select:focus{
+          border-color: #66afe9;
+          outline: 0;
+          -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+      }
+      button {
+            color: #444444;
+            background: #F3F3F3;
+            border: 1px #DADADA solid;
+            padding: 9px 16px;
+            border-radius: 2px;
+            font-weight: bold;
+            font-size: 9pt;
+            outline: none;
+        }
+      button:hover {
+          border: 1px #C6C6C6 solid;
+          box-shadow: 1px 1px 1px #EAEAEA;
+          color: #333333;
+          background: #F7F7F7;
+      }
+      button:active {
+          box-shadow: inset 1px 1px 1px #DFDFDF;   
+      }
+      button.blue {
+              color: white;
+              background: #4C8FFB;
+              border: 1px #3079ED solid;
+              box-shadow: inset 0 1px 0 #80B0FB;
+              font-size: 18px;
+              font-weight: 600;
+          }
+      button.blue:hover {
+          border: 1px #2F5BB7 solid;
+          box-shadow: 0 1px 1px #EAEAEA, inset 0 1px 0 #5A94F1;
+          background: #3F83F1;
+      }
+
+      button.blue:active {
+          box-shadow: inset 0 2px 5px #2370FE;   
+      }
+      label{
+          width: 200px;
+          color: black;
+          font-size: 16px;
+          display: inline-block;
+          /*text-align: right;*/
+      }
+      input[type="checkbox"] {
+        position: absolute;
+        clip: rect(0, 0, 0, 0)
+      }
+      .mark::before {  
+          content: '\a0';
+          display: inline-block;
+          border: 2px solid #ccc; 
+          border-radius: 3px;
+          text-align: left;
+          width: 28px;
+          height: 28px;
+          font-size: 25px;
+          font-weight: bold;
+          margin-right: 3vw;
+          line-height: 1.4vw;
+      }
+      input[type="checkbox"]:checked+.mark::before {
+          content: '\2713';
+          color: #257ee4;
+      }
+
+      .left {
+        float: left;
+        width: 380px;
+        height: 200px;
+      }
+      .right {
+        margin-left: 310px;
+        height: 200px;
+      }
+
+      .left2 {
+        float: left;
+        text-align: center;   
+        width: 600px;
+        height: 200px;
+      }
+      .right2 {
+        text-align: center; 
+        margin-left: 200px;
+        height: 200px;
+      }
+
+
+      input[type='radio']:after {
+        width: 35px;
+        height: 35px;
+        border-radius: 23px;
+        top: -9px;
+        left: -2px;
+        position: relative;
+        background-color: #d1d3d1;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 3px solid white;
+      }
+
+      input[type='radio']:checked:after {
+          width: 35px;
+          height: 35px;
+          border-radius: 23px;
+          top: -9px;
+          left: -2px;
+          position: relative;
+          background-color: #3687e4;
+          content: '';
+          display: inline-block;
+          visibility: visible;
+          border: 3px solid white;
+      }
+      input[type='user']{
+            outline-style: none ;
+            border: 2px solid #ccc; 
+            border-radius: 3px;
+            padding: 9px 14px;
+            width: 250px;
+            height: 40px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: "Microsoft soft";
+        }
+      input[type='user']:focus{
+            border-color: #66afe9;
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+      }
+
+    </style>
+  </head>
+
+  <body id="top">
+
+
+        <header id="home">
+          <nav>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2">
+                  <nav class="pull">
+                    <ul class="top-nav">
+                      <li><a href="#intro">Introduction <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+                      <li><a href="#responsive">Design <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+                      <li><a href="#portfolio">Info Query <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+                      <li><a href="#team">Team <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+                      <li><a href="#contact">Get in Touch <span class="indicator"><i class="fa fa-angle-right"></i></span></a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </nav>
+
+          <section class="hero" id="hero">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-right navicon">
+                  <a id="nav-toggle" class="nav_slide_button" href="#"><span></span></a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center inner">
+                  <h1 class="animated fadeInDown">INTELLIGENT<span>FARM</span></h1>
+                  <p class="animated fadeInUp delay-05s">An website to help you get all information in your farm</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </header>
+
+
+        <section class="intro text-center section-padding" id="intro">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2 wp1">
+                <h1 class="arrow">An Introduction to this Database Project</h1>
+                <p>As the fundamental industry of any countries in the world, the agricultureindustry dealt with the basic energy need of human beings. The motivation of the project is that, by constructing a farm management system, supported by carefully designed database, pleasingly simple and friendly UI and high accuracy data analytic algorithms, which provides efficient and powerful services such as granular control, farming decision suggestion, data visualization etc. <a href="#portfolio">GET STARTED NOW.</a></p>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="text-center" id="responsive">
+          <div class="container-fluid nopadding responsive-services">
+            <div class="wrapper">
+              <div class="iphone">
+                <div class="wp3"></div>
+              </div>
+              <div class="fluid-white"></div>
+            </div>
+
+            <div class="container designs">
+              <div class="row">
+                <div class="col-md-5 col-md-offset-7">
+                    <h1 class="arrow">Farm Information</h1>
+                    <p>Farm Name: Intelligence Farm</p>
+                    <p>Farm ID: 382146</p>
+                    <p>Farmer: Deng Mi</p>
+                    <p>Tel: 13810265160</p>
+                    <p>Address: Yuelu District, Changsha City, Hunan Province</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-5 col-md-offset-7">
+                  <div id="servicesSlider">
+                    <ul class="slides">
+                      <li>
+                        <h1 class="arrow">Function1: Report of Daliy Info</h1>
+                        <p> In this part, we provide the farmer a quick method to query the information of the specific factors on a certain day. We display the information in the chart.</p>
+                      </li>
+                      <li>
+                        <h1 class="arrow">Function2: Chart of Annual Data</h1>
+                        <p> In this part, we visualize our database to find the inner correlation. The first picture is the annual information, the second figure is the heatmap of the factor and the grade.</p> 
+                      </li>
+                      <li>
+                        <h1 class="arrow">Function3: Best Solution</h1>
+                        <p> This function is designed to predict the future, which enables the user to acquire a best amount to add the fertilizer and pesticide under a certain environment conditions.</p> 
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </section>
+
+
+        <section class="swag text-center">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <h1>I got 99 Problems<span>but <em>My Farm</em> ain't one</span></h1>
+                <a href="#portfolio" class="down-arrow-btn"><i class="fa fa-chevron-down"></i></a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <section class="portfolio text-center section-padding" id="portfolio">
+          <div class="container">
+            <div class="row">
+              <h1 class="arrow"><font size="4">Click The Picture To Find More Information</h1>
+              <br></br>
+              <div id="portfolioSlider">
+                
+                <ul class="slides">
+                  <div class="selected">       
+                    <div class="col-md-4 wp4">
+                      <h2>Report of Daliy Info</h2>
+                      <div class="overlay-effect effects clearfix">
+                        <div class="img">
+                          <img src="img/fuc1.jpg" alt="Portfolio Item" height="200" width="200">
+                          <div class="overlay">
+                            <a class="expand"><i class="fa fa-search"></i><br>Click to Start</a>
+                            <a class="close-overlay hidden">x</a>
+                          </div>
+                        </div>
+                      </div>                     
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-md-4 wp4 delay-05s">
+                      <h2>Chart of Annual Data</h2>
+                      <div class="overlay-effect effects clearfix">
+                        <div class="img">
+                          <img src="img/fuc2.jpg" alt="Portfolio Item" height="200" width="200">
+                          <div class="overlay">
+                            <a class="expand"><i class="fa fa-search"></i><br>Click to Start</a>
+                            <a class="close-overlay hidden">x</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-md-4 wp4 delay-1s">
+                      <h2>Best Solution</h2>
+                      <div class="overlay-effect effects clearfix">
+                        <div class="img">
+                          <img src="img/fuc3.jpg" alt="Portfolio Item" height="200" width="200">
+                          <div class="overlay">
+                            <a class="expand"><i class="fa fa-search"></i><br>Click to Start</a>
+                            <a class="close-overlay hidden">x</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ul>
+              
+                <br></br>
+
+                <div class="content">
+                  <div class="list" style="display:none">
+                      <h1 class="arrow">Report of Daliy Info</h1>
+                      <br></br>
+                      <div class="outer1">
+                        <h3><u>Set the Date and Specific Entries Your Want To Check</u></h3><br>
+                        <form name="reg_testdate">
+                          <div class="left">
+                            <label>YEAR: </label>
+                            <select name="YYYY" onchange="YYYYDD(this.value)" id="Y">
+                              <option value="">Select Year</option>
+                            </select><br><br>
+                            <label>MONTH: </label>
+                            <select name="MM" onchange="MMDD(this.value)" id="M">
+                              <option value="">Select Year</option>
+                            </select><br><br>
+                            <label>DAY: </label>
+                            <select name="DD" id="M"> 
+                              <option value="">Select Day</option>
+                            </select><br><br>
+                          </div>
+                          <div class="right">
+                            <input type="checkbox" name="ent" value="Temperature" id="Temperature">
+                            <label class="mark" for="Temperature"><font size="4">Temperature</font></label>
+                            <input type="checkbox" name="ent" value="Humidity" id="Humidity">
+                            <label class="mark" for="Humidity"><font size="4">Humidity</font></label>
+                            <input type="checkbox" name="ent" value="Pressure" id="Pressure">
+                            <label class="mark" for="Pressure"><font size="4">Pressure</font></label>
+                            <br><br>
+                            <input type="checkbox" name="ent" value="PM2.5" id="PM2.5">
+                            <label class="mark" for="PM2.5"><font size="4">&nbsp&nbsp&nbsp&nbsp&nbspPM2.5&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</font></label>
+                            <input type="checkbox" name="ent" value="Fertilizer" id="Fertilizer">
+                            <label class="mark" for="Fertilizer"><font size="4">Fertilizer</font></label>
+                            <input type="checkbox" name="ent" value="Pestcide" id="Pestcide">
+                            <label class="mark" for="Pestcide"><font size="4">Pestcide</font></label>
+                            <br><br>
+                            <input type="checkbox" name="ent" value="Grade" id="Grade">
+                            <label class="mark" for="Grade"><font size="4">&nbsp&nbspGrade&nbsp&nbsp</font></label>
+                            <br><br>
+                          </div>
+                          <p><button type="button" class="blue button" onclick="showSite()">
+                            View Your Farm</button></a></p>
+                        </form>
+                      </div>
+                      <br><br><br>
+                      <div id="txtHint">Your report is coming...</div>
+                      <br>
+                  </div>
+
+                  <div class="list" style="display:none">
+                    <h1 class="arrow">Chart of Annual Data</h1>
+                    <br></br>
+                    <div class="outer1">
+                      <h3><u>Choose One Specific Entry Your Want To Check</u></h3><br>
+                      <form  name="f2_date">
+                        <div class="left2">
+                          <input type="radio" name="ent2"><label><font size="4">Temperature</font></label><br><br>
+                          <input type="radio" name="ent2"><label><font size="4">Humidity</font></label><br><br>
+                          <input type="radio" name="ent2"><label><font size="4">Pressure</font></label><br><br>
+                          <input type="radio" name="ent2"><label><font size="4">PM2.5</font></label><br>
+                        </div>
+                        <div class="right2">
+                          <input type="radio" name="ent2"><label><font size="4">Fertilizer</font></label><br><br>
+                          <input type="radio" name="ent2"><label><font size="4">Pestcide</font></label><br><br>
+                          <input type="radio" name="ent2"><label><font size="4">Grade and Date</font></label><br>
+                        </div>
+                        <p><button type="button" class="blue button" onclick="showPic()">
+                          View the Chart</button></a></p>
+                      </form>
+                    </div>
+                    <br><br><br>
+                    <div id="txtHint2">Your chart is coming...</div>
+                    <br>
+                  </div>
+
+                  <div class="list" style="display:none">
+                    <h1 class="arrow">Best Solution</h1>
+                    <br></br>
+                    <div class="outer1">
+                      <h3><u>Input the Environment Data and Find Your Best Solution</u></h3>
+                      <form  name="f3_date">
+                          <input type="user" name="ent3"><label><font size="4">Temperature</font></label><br><br>
+                          <input type="user" name="ent3"><label><font size="4">Humidity</font></label><br><br>
+                          <input type="user" name="ent3"><label><font size="4">Pressure</font></label><br><br>
+                          <input type="user" name="ent3"><label><font size="4">PM2.5</font></label><br>
+                        <p><button type="button" class="blue button" onclick="pred()">
+                          View the Best Solution</button></a></p>
+                      </form>
+                    </div>
+                    <br><br><br>
+                    <div id="txtHint3">Your best solution is coming...</div>
+                    <br>
+                  </div>
+                </div>
+                <script>
+                  $(function(){ 
+                      $(".slides div").click(function(){  //获取点击事件的对象
+                          var divShow = $(".content").children('.list');  //获取要显示或隐藏的对象
+                          if (!$(this).hasClass('selected')) {  //判断当前对象是否被选中，如果没选中的话进入if循环 
+                              var index = $(this).index();  //获取当前对象的索引
+                              $(this).addClass('selected').siblings('div').removeClass('selected');  //当前对象添加选中样式并且其同胞移除选中样式；
+                              $(divShow[index]).show();  //索引对应的div块显示
+                              $(divShow[index]).siblings('.list').hide();  //索引对应的div块的同胞隐藏
+                          }
+                      });
+                  });       
+                </script>
+              </div>
+            </div>  
+          </div>
+        </section>
+
+        <section class="swag text-center">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <h1>Customize the chart <span>as <em>YOU </em> like</span></h1>
+                <a href="#cus" class="down-arrow-btn"><i class="fa fa-chevron-down"></i></a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="portfolio text-center section-padding" id="cus">
+          <br><br><br>
+          <div class="text-center">
+            <h1 class="arrow"><font size="4">The Custom Chart Generator</h1>
+            <div class="no">
+              <object type="text/html" data="https://sanddance.js.org/app/" style="width:1200px; height:800px">
+              </object>
+            </div>
+          </div>
+          <br><br><br>
+        </section>
+
+
+        <div class="ignite-cta text-center">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <a href="#" class="ignite-btn">Back to Top</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <section class="team text-center section-padding" id="team">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <h1 class="arrow">We're a team that adore what we do</h1>
+              </div>
+            </div>
+            <div class="row">
+              <div class="team-wrapper">
+                <div id="teamSlider">
+                  <ul class="slides">
+                    <li>
+                      <div class="col-md-4 wp5">
+                        <img src="img/cyc.png" alt="Team Member" height="200" width="200">
+                        <h2>Cui Yuncong</h2>
+                        <p>Front-End Developer. Use HTML, CSS, JavaScript and other professional skills and tools to realize product UI design draft into website products, covering web pages and interactive issues.</p>
+                      </div>
+                      <div class="col-md-4 wp5 delay-05s">
+                        <img src="img/ljr.png" alt="Team Member" height="200" width="200">
+                        <h2>Li Jiarui</h2>
+                        <p>Back-End Developer. Engage in software development, whose main responsibilities are platform design, interface design and function implementation.</p>
+                        
+                      </div>
+                      <div class="col-md-4 wp5 delay-1s">
+                        <img src="img/lr.png" alt="Team Member" height="200" width="200">
+                        <h2>Liu Run</h2>
+                        <p>Data Analyst. Provide multi-dimensional data analysis services, and put forward business strategy suggestions according to the data analysis results, and optimize the data resource coordination of the whole system.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="col-md-4 wp5">
+                        <img src="img/lzx.png" alt="Team Member" height="200" width="200">
+                        <h2>Liu Zhixuan</h2>
+                        <p>Infrastructure Developer. Design good technical framework according to requirements. Optimize the quality of client products, improve the ease of use of software, and enhance user experience.</p> 
+                      </div>
+                      <div class="col-md-4 wp5 delay-05s">
+                        <img src="img/wdy.png" alt="Team Member" height="200" width="200">
+                        <h2>Wu Dongyang</h2>
+                        <p>Database Developer. Engage in the management and maintenance of database management system, mainly responsible for the whole life cycle management of business database from design, test to deployment and delivery.</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="subscribe text-center">
+          <div class="container">
+            <h1><i class="fa fa-paper-plane"></i><span>Subscribe to stay in the loop</span></h1>
+          </div>
+        </section>
+
+        <section class="dark-bg text-center section-padding contact-wrap" id="contact">
+          <a href="#top" class="up-btn"><i class="fa fa-chevron-up"></i></a>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <h1 class="arrow">Drop us a line</h1>
+              </div>
+            </div>
+            <div class="row contact-details">
+              <div class="col-md-4">
+                <div class="light-box box-hover">
+                  <h2><i class="fa fa-map-marker"></i><span>Address</span></h2>
+                  <p>2001 Longxiang Road, Longgang District, Shenzhen</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="light-box box-hover">
+                  <h2><i class="fa fa-mobile"></i><span>Phone</span></h2>
+                  <p>(86) 755 8427 3000</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="light-box box-hover">
+                  <h2><i class="fa fa-paper-plane"></i><span>Email</span></h2>
+                  <p>sds@cuhk.edu.cn</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6">
+              </div>
+              <div class="col-md-6 credit">
+                <p>Copyright &copy; 2021.Company name All rights reserved.</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/waypoints.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/scripts.js"></script>
+        <script src="js/jquery.flexslider.js"></script>
+        <script src="js/modernizr.js"></script>
+        <div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>
+  
+   </body>
+   
+</html>
